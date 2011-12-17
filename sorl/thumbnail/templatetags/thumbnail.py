@@ -90,6 +90,15 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options.update(value)
             else:
                 options[key] = value
+
+        # hack: pokud neni zadan format, anebo ma hodnotu auto, pak se format obrazku nemeni
+        if options.get('format', 'auto') == 'auto':
+            filename = file_.name.lower()
+            if filename.endswith('.png'):
+                options['format'] = 'PNG'
+            else:
+                options['format'] = 'JPEG'
+
         if settings.THUMBNAIL_DUMMY:
             thumbnail = DummyImageFile(geometry)
         elif file_:
