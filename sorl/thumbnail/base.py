@@ -11,6 +11,16 @@ EXTENSIONS = {
 }
 
 
+def guess_image_format(filename):
+    """
+    Helper function -- guess image file format according to filename extension.
+    """
+    if filename.lower().endswith('.png'):
+        return 'PNG'
+    else:
+        return 'JPEG'
+
+
 class ThumbnailBackend(object):
     """
     The main class for sorl-thumbnail, you can subclass this if you for example
@@ -93,9 +103,12 @@ class ThumbnailBackend(object):
         """
         Computes the destination filename.
         """
+        # HACK: preserving output format of the image
+        if options.get('format', 'auto') == 'auto':
+            options['format'] = guess_image_format(source.name)
+
         key = tokey(source.key, geometry_string, serialize(options))
         # make some subdirs
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             EXTENSIONS[options['format']])
-

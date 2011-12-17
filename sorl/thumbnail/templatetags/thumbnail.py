@@ -6,7 +6,7 @@ from django.utils.encoding import smart_str
 from functools import wraps
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
-from sorl.thumbnail import default
+from sorl.thumbnail import default, guess_image_format
 from sorl.thumbnail.parsers import parse_geometry
 
 
@@ -91,13 +91,9 @@ class ThumbnailNode(ThumbnailNodeBase):
             else:
                 options[key] = value
 
-        # hack: pokud neni zadan format, anebo ma hodnotu auto, pak se format obrazku nemeni
+        # HACK: preserving output format of the image
         if options.get('format', 'auto') == 'auto':
-            filename = file_.name.lower()
-            if filename.endswith('.png'):
-                options['format'] = 'PNG'
-            else:
-                options['format'] = 'JPEG'
+            options['format'] = guess_image_format(file_.name)
 
         if settings.THUMBNAIL_DUMMY:
             thumbnail = DummyImageFile(geometry)
