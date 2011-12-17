@@ -6,7 +6,8 @@ from django.utils.encoding import smart_str
 from functools import wraps
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
-from sorl.thumbnail import default, guess_image_format
+from sorl.thumbnail import default
+from sorl.thumbnail.base import guess_image_format
 from sorl.thumbnail.parsers import parse_geometry
 
 
